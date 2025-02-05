@@ -1,15 +1,16 @@
-import { useWallet } from "@solana/wallet-adapter-react";
+import dynamic from "next/dynamic";
+
+const WalletMultiButtonDynamic = dynamic(
+  async () =>
+    (await import("@solana/wallet-adapter-react-ui")).WalletMultiButton,
+  { ssr: false }
+);
 
 const WalletButton = () => {
-  const { connect, disconnect, publicKey } = useWallet();
-
   return (
-    <button
-      onClick={publicKey ? disconnect : connect}
-      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200"
-    >
-      {publicKey ? "Disconnect Wallet" : "Connect Wallet"}
-    </button>
+    <div className="flex justify-center">
+      <WalletMultiButtonDynamic />
+    </div>
   );
 };
 
