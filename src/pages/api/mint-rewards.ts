@@ -7,8 +7,8 @@ export default async function handler(
   try {
     const { userWallet, amount } = req.body;
 
-    // 예: Solana 트랜잭션 처리 로직
-    console.log(`Minting ${amount} tokens to ${userWallet}`);
+    // Solana 트랜잭션 처리 로직 (예제)
+    console.log(`Minting ${amount} tokens to wallet: ${userWallet}`);
 
     res.status(200).json({ message: "Token minted successfully!" });
   } catch (error) {
