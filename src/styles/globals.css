@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 🌟 기본 배경 및 폰트 설정 */
+body {
+  @apply bg-black text-white font-sans;
+}
+
+/* 🌟 UI 요소 기본 스타일 */
+button {
+  @apply px-4 py-2 rounded-lg transition-all duration-300;
+}
+
+/* 🌟 호버 효과 */
+button:hover {
+  @apply bg-blue-500;
+}
