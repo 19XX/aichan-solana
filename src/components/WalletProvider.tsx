@@ -4,8 +4,8 @@ import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { clusterApiUrl } from "@solana/web3.js";
 
-export const WalletProviderComponent = ({ children }: { children: ReactNode }) => {
-  const endpoint = useMemo(() => clusterApiUrl("devnet"), []);
+export function WalletProviderComponent({ children }: { children: ReactNode }) {
+  const endpoint = clusterApiUrl("devnet");
   const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
 
   return (
@@ -15,4 +15,6 @@ export const WalletProviderComponent = ({ children }: { children: ReactNode }) =
       </WalletProvider>
     </ConnectionProvider>
   );
-};
+}
+
+export default WalletProviderComponent; // 🔥 추가된 부분 (default export)
