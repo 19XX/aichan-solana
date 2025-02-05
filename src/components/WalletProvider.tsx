@@ -1,24 +1,34 @@
-import { FC, ReactNode, useMemo } from "react";
-import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-import { clusterApiUrl } from "@solana/web3.js";
+import { ReactNode, useMemo } from "react";
+import dynamic from "next/dynamic";
 
-import "@solana/wallet-adapter-react-ui/styles.css";
+const WalletProviderComponent = dynamic(() => {
+  return import("@solana/wallet-adapter-react").then(
+    ({ ConnectionProvider, WalletProvider }) => {
+      return import("@solana/wallet-adapter-react-ui").then(({ WalletModalProvider }) => {
+        return import("@solana/wallet-adapter-phantom").then(({ PhantomWalletAdapter }) => {
+          return import("@solana/web3.js").then(({ clusterApiUrl }) => {
+            const WalletProviderWrapper = ({ children }: { children: ReactNode }) => {
+              const endpoint = useMemo(() => clusterApiUrl("devnet"), []);
+              const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
 
-interface WalletProviderProps {
-  children: ReactNode;
-}
+              return (
+                <ConnectionProvider endpoint={endpoint}>
+                  <WalletProvider wallets={wallets} autoConnect>
+                    <WalletModalProvider>{children}</WalletModalProvider>
+                  </WalletProvider>
+                </ConnectionProvider>
+              );
+            };
 
-export const WalletProviderComponent: FC<WalletProviderProps> = ({ children }) => {
-  const endpoint = useMemo(() => clusterApiUrl("devnet"), []);
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
+            // ✅ `displayName` 추가 (ESLint 오류 해결)
+            WalletProviderWrapper.displayName = "WalletProviderComponent";
 
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>{children}</WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+            return WalletProviderWrapper;
+          });
+        });
+      });
+    }
   );
-};
+}, { ssr: false });
+
+export default WalletProviderComponent;
