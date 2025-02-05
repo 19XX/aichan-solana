@@ -1,0 +1,10 @@
+{
+    "ignoreBuildStep": true,
+    "builds": [
+      {
+        "src": "src/pages/**/*",
+        "use": "@vercel/next"
+      }
+    ]
+  }
+  
