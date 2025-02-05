@@ -1,25 +1,32 @@
-import { useWallet } from "@solana/wallet-adapter-react";
+import dynamic from "next/dynamic";
+import { useState, useEffect } from "react";
+
+const WalletAdapterReact = dynamic(
+  async () => (await import("@solana/wallet-adapter-react")).useWallet,
+  { ssr: false }
+);
 
 export const WalletButton = () => {
-  const { connect, disconnect, publicKey } = useWallet();
+  const [wallet, setWallet] = useState<any>(null);
+
+  useEffect(() => {
+    async function loadWallet() {
+      const { useWallet } = await import("@solana/wallet-adapter-react");
+      setWallet(useWallet);
+    }
+    loadWallet();
+  }, []);
+
+  if (!wallet) return <button>Loading...</button>;
+
+  const { connect, disconnect, publicKey } = wallet();
 
   return (
-    <div>
-      {publicKey ? (
-        <button
-          onClick={disconnect}
-          className="px-4 py-2 bg-red-500 text-white rounded"
-        >
-          Disconnect Wallet
-        </button>
-      ) : (
-        <button
-          onClick={connect}
-          className="px-4 py-2 bg-green-500 text-white rounded"
-        >
-          Connect Wallet
-        </button>
-      )}
-    </div>
+    <button
+      onClick={publicKey ? disconnect : connect}
+      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+      {publicKey ? "Disconnect Wallet" : "Connect Wallet"}
+    </button>
   );
 };
