@@ -22,14 +22,14 @@ export default function Home() {
 
     setLoading(true);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
       const res = await fetch(`${apiUrl}/mint-reward`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userWallet: publicKey.toBase58(),
-          amount: 1000000000,
+          amount: 1000000000, // 1 토큰
         }),
       });
 
@@ -49,7 +49,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black text-white font-sans bg-animated">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black text-white font-sans">
       <Head>
         <title>보상 토큰 발행</title>
       </Head>
