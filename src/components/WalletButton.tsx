@@ -1,25 +1,11 @@
-import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
 
-const WalletAdapterReact = dynamic(
-  async () => (await import("@solana/wallet-adapter-react")).useWallet,
-  { ssr: false }
-);
-
-export const WalletButton = () => {
-  const [wallet, setWallet] = useState<any>(null);
-
-  useEffect(() => {
-    async function loadWallet() {
-      const { useWallet } = await import("@solana/wallet-adapter-react");
-      setWallet(useWallet);
-    }
-    loadWallet();
-  }, []);
+const WalletButton = () => {
+  const wallet = useWallet();
 
   if (!wallet) return <button>Loading...</button>;
 
-  const { connect, disconnect, publicKey } = wallet();
+  const { connect, disconnect, publicKey } = wallet;
 
   return (
     <button
@@ -30,3 +16,5 @@ export const WalletButton = () => {
     </button>
   );
 };
+
+export default WalletButton;
